@@ -1,5 +1,8 @@
 const path = require("path");
+const webpack = require("webpack");
+
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
@@ -56,10 +59,15 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"],
   },
   output: {
+    clean: true,
     filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
   },
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [{ from: "public" }],
+    }),
+
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "./src/pages/index/index.html",
