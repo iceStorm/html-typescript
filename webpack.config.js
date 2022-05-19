@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
-    index: "./src/pages/index/index.ts",
+    index: "./src/index.ts",
     about: "./src/pages/about/about.ts",
   },
   module: {
@@ -18,16 +18,7 @@ module.exports = {
         exclude: /node_modules/,
       },
 
-      // css loader
-      {
-        test: /\.css$/i,
-        use: [
-          // The `injectType`  option can be avoided because it is default behaviour
-          { loader: "style-loader", options: { injectType: "styleTag" } },
-          "css-loader",
-        ],
-      },
-
+      // css/scss/sass loader
       {
         test: /\.s[ac]ss$/i,
         use: [
@@ -35,20 +26,31 @@ module.exports = {
           { loader: "style-loader", options: { injectType: "styleTag" } },
 
           // Translates CSS into CommonJS
-          "css-loader",
+          {
+            loader: "css-loader",
+            options: { import: true, sourceMap: true },
+          },
+
           // Compiles Sass to CSS
           "sass-loader",
         ],
       },
 
-      // file loader
       // {
-      //   test: /\.(png|jpe?g|gif|jp2|webp)$/,
-      //   loader: "file-loader",
-      //   options: {
-      //     name: "[name].[ext]",
-      //   },
+      //   test: /\.s[ac]ss$/,
+      //   exclude: /node_modules/,
+      //   use: [
+      //     {
+      //       loader: "file-loader",
+      //       options: {
+      //         // outputPath: "css/",
+      //         name: "[name].css",
+      //       },
+      //     },
+      //     "sass-loader",
+      //   ],
       // },
+
       {
         test: /\.(png|jpe?g|gif|jp2|webp)$/,
         type: "asset/resource",
@@ -65,16 +67,24 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin({
-      patterns: [{ from: "public" }],
+      patterns: [
+        {
+          from: "public",
+          globOptions: {
+            ignore: ["**/index.html"],
+          },
+        },
+      ],
     }),
 
     new HtmlWebpackPlugin({
       filename: "index.html",
-      template: "./src/pages/index/index.html",
+      template: "./public/index.html",
       chunks: ["index"],
     }),
     new HtmlWebpackPlugin({
       filename: "about.html",
+      title: "About",
       template: "./src/pages/about/about.html",
       chunks: ["about"],
     }),

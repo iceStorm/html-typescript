@@ -1,5 +1,5 @@
-import "./index.scss";
-import img from "./java-script.png";
+import "./styles/main.scss";
+import img from "./assets/java-script.png";
 
 const button = document.createElement("button");
 button.innerHTML = `<img src=${img} />`;
